@@ -338,12 +338,13 @@
                         cleanBeforeUpdate[uniqueId] = null;
                         beforeUpdate[uniqueId] = null;
                     }
-
-                    if (cleanupCallbacks) {
-                        for (var i = 0, l = cleanupCallbacks.length; i < l; i++) {
-                            cleanupCallbacks[i]();
-                        }
-                        cleanupCallbacks.length = 0;
+                    if (cleanServerError) {
+                        cleanServerError();
+                        cleanServerError = null;
+                    }
+                    if (cleanNetworkError) {
+                        cleanNetworkError();
+                        cleanNetworkError = null;
                     }
                 }, 270);
                 return isBeforeSubmit;
@@ -447,41 +448,21 @@
             }
         });
 
-        var cleanupCallbacks = [];
-
-        cleanupCallbacks.push(window.ice.onServerError(function() {
+        var cleanServerError = window.ice.onServerError(function() {
             if (handleCleanup(false)) {
                 return;
             }
             anticipatePossibleSecondSubmit = UNANTICIPATED;
             changeState(SERVER_ERROR);
-        }));
+        });
 
-        cleanupCallbacks.push(window.ice.onNetworkError(function() {
+        var cleanNetworkError = window.ice.onNetworkError(function() {
             if (handleCleanup(false)) {
                 return;
             }
             anticipatePossibleSecondSubmit = UNANTICIPATED;
             changeState(NETWORK_ERROR);
-        }));
-
-        cleanupCallbacks.push(window.ice.onSessionExpiry(function() {
-            if (handleCleanup(false)) {
-                return;
-            }
-            anticipatePossibleSecondSubmit = UNANTICIPATED;
-            changeState(SESSION_EXPIRED);
-        }));
-
-        if (ice.push) {
-            cleanupCallbacks.push(window.ice.onBlockingConnectionLost(function() {
-                if (handleCleanup(false)) {
-                    return;
-                }
-                anticipatePossibleSecondSubmit = UNANTICIPATED;
-                changeState(NETWORK_ERROR);
-            }));
-        }
+        });
 
         changeState(IDLE);
     };

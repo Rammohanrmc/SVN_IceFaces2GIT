@@ -23,7 +23,7 @@
 <!--    <groupId>com.icesoft.icefaces-ee</groupId> -->
 
 	<artifactId>bundle-parent</artifactId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.1.0</version>
     <packaging>pom</packaging>
     <name>ICEfaces</name>
     <description>ICEfaces Parent Project</description>
@@ -96,14 +96,6 @@
         <icefaces.product.group>org.icefaces</icefaces.product.group>
         <icefaces.product.name>ICEfaces</icefaces.product.name>
         <icefaces.lib.name>icefaces</icefaces.lib.name>
-
-        <iceutil.product.group>org.icesoft.util</iceutil.product.group>
-        <iceutil.product.name>ICEsoft Util</iceutil.product.name>
-        <iceutil.lib.name>iceutil</iceutil.lib.name>
-
-        <icenotify.product.group>org.icesoft.notify</icenotify.product.group>
-        <icenotify.product.name>ICEsoft Notify</icenotify.product.name>
-        <icenotify.lib.name>icenotify</icenotify.lib.name>
 
         <icepush.product.group>org.icepush</icepush.product.group>
         <icepush.product.name>ICEpush</icepush.product.name>
@@ -310,18 +302,6 @@
             <dependency>
                 <groupId>${icefaces.product.group}</groupId>
                 <artifactId>${icefaces.lib.name}-mobi</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${iceutil.product.group}</groupId>
-                <artifactId>${iceutil.lib.name}</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${icenotify.product.group}</groupId>
-                <artifactId>${icenotify.lib.name}</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

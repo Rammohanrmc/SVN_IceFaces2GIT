@@ -205,9 +205,26 @@
                 fullHeight = maxHeight - headHeight - footHeight - 1;
 
             /* set height to full visible size of parent */
-            if(isNumber(fullHeight) && fullHeight > 0) {
+            if( isNumber(fullHeight) )
                 bodyDivWrapper.style.height = fullHeight + 'px';
-            }
+
+            /* set height to full visible size of parent minus
+             height of all following elements */
+            var container = getScrollableContainer(element),
+                bottomResize = function() {
+                    if (!container){
+                     //   console.log (" NO CONTAINER SO RETURN");
+                        return;
+                    }
+                    fullHeight -= (container.scrollHeight - container.clientHeight);
+                    if( isNumber(fullHeight)){
+                        if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i))
+                            fullHeight += 60;
+                        bodyDivWrapper.style.height = fullHeight + 'px';
+                    }
+                };
+
+            if (container) bottomResize();
         }
 
         var touchedHeadCellIndex = {},
@@ -312,7 +329,7 @@
 		var activationTimeout = null;
 
         function initActivationEvents() {
-            var element = getNode('body'),
+            var element = getNode('elem'),
                 /* filter events for those bubbled from tr elems */
                 isRowEvent = function(callback) {
                     return function(e) {
@@ -322,39 +339,40 @@
                             callback(e);
                         }
                     };
-                };
+                }
 
             if (isTouchDevice) {
                 ice.mobi.addListener(element, "touchend", function(e) {
 					if (!activationTimeout) {
                         //stop from triggering the synthetic click event
                         e.stopPropagation();
-                        e.preventDefault();
 						activationTimeout = setTimeout(function() {
-                                try {
-                                    var tr = closest(e.srcElement || e.target, "tr");
-                                    if (tr && im.matches(tr, bodyRowSelector)) {
-                                        e.delegateTarget = tr;
-
-                                        //remove focus from the any previously used input element to allow row selection
-                                        //without having the keyboard popup
-                                        var activeElement = document.activeElement;
-                                        if (activeElement && ['text', 'number', 'email', 'tel', 'search', 'url', 'password'].indexOf(activeElement.type) > -1) {
-                                            activeElement.blur();
-                                            ice.setFocus('');
-                                        }
-                                        rowTouchEnd(e);
-
-                                    }
-                                } finally {
-                                    clearTimeout(activationTimeout);
-                                    activationTimeout = null;
-                                }
+								var tr = closest(e.srcElement || e.target, "tr");
+								if (tr && im.matches(tr, bodyRowSelector)) {
+									e.delegateTarget = tr;
+									rowTouchEnd(e);
+								}
+								clearTimeout(activationTimeout);
+								activationTimeout = null;
 							}
 						,100);
 					}
 				});
                 ice.mobi.addListener(element, "touchstart", isRowEvent(rowTouchStart));
+                ice.mobi.addListener(element, "click", function(e) {
+					if (!activationTimeout) {
+						activationTimeout = setTimeout(function() {
+								var tr = closest(e.srcElement || e.target, "tr");
+								if (tr && im.matches(tr, bodyRowSelector)) {
+									e.delegateTarget = tr;
+									activateRow(e);
+								}
+								clearTimeout(activationTimeout);
+								activationTimeout = null;
+							}
+						,100);
+					}
+				});
             } else {
                 ice.mobi.addListener(element, "click", isRowEvent(activateRow));
             }

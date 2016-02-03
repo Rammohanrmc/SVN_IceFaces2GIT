@@ -16,17 +16,20 @@
 
 package org.icefaces.impl.util;
 
+import com.sun.faces.facelets.tag.jsf.ComponentSupport;
 import org.icefaces.impl.context.DOMPartialViewContext;
 import org.icefaces.util.EnvUtils;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.PhaseEvent;
+import javax.faces.event.PhaseId;
+import javax.faces.event.PhaseListener;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -107,43 +110,5 @@ public class CoreUtils {
     public static UIComponent getResourceContainer(UIViewRoot root, String target) {
         String facetName = EnvUtils.isMojarra() ? "javax_faces_location_" + target.toUpperCase() : target;
         return root.getFacets().get(facetName);
-    }
-
-    public static UIComponent findComponentById(UIComponent base, String id) {
-        LinkedList<UIComponent> queue = new LinkedList();
-        queue.addLast(base);
-
-        while (!queue.isEmpty()) {
-            UIComponent c = queue.removeFirst();
-            if (id.equals(c.getId())) {
-                return c;
-            } else {
-                Iterator<UIComponent> kids = c.getFacetsAndChildren();
-                while (kids.hasNext()) {
-                    queue.addLast(kids.next());
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static UIComponent findComponentByClientId(UIComponent base, String clientId) {
-        LinkedList<UIComponent> queue = new LinkedList();
-        queue.addLast(base);
-
-        while (!queue.isEmpty()) {
-            UIComponent c = queue.removeFirst();
-            if (clientId.equals(c.getClientId())) {
-                return c;
-            } else {
-                Iterator<UIComponent> kids = c.getFacetsAndChildren();
-                while (kids.hasNext()) {
-                    queue.addLast(kids.next());
-                }
-            }
-        }
-
-        return null;
     }
 }

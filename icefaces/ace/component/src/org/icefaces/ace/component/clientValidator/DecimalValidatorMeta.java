@@ -33,9 +33,7 @@ import org.icefaces.resources.ICEResourceLibrary;
         componentType   = "org.icefaces.ace.component.DecimalValidator",
         rendererType    = "org.icefaces.ace.component.ValidatorRenderer",
         componentFamily = "org.icefaces.ace.component",
-        tlddoc = "The clientValidateDecimal component validates the input of the enclosing component by allowing only decimal values to be submitted." +
-                "<p>For more information, see the <a href=\"http://wiki.icefaces.org/display/ICE/ClientValidateDecimal\">ClientValidateDecimal Wiki Documentation</a>."
- 
+        tlddoc = "The ClientValidator is a ..... "
 )
 
 @ICEResourceLibrary(ACEResourceNames.ACE_LIBRARY)

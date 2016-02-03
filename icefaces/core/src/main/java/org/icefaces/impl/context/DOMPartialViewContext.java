@@ -17,7 +17,6 @@
 package org.icefaces.impl.context;
 
 import org.icefaces.impl.event.FixViewState;
-import org.icefaces.impl.util.CoreUtils;
 import org.icefaces.impl.util.DOMUtils;
 import org.icefaces.util.EnvUtils;
 import org.icefaces.util.FocusController;
@@ -145,12 +144,11 @@ public class DOMPartialViewContext extends PartialViewContextWrapper {
                 facesContext.setResponseWriter(writer);
 
                 Document oldDOM = writer.getOldDocument();
-                UIViewRoot viewRoot = facesContext.getViewRoot();
-
-                applyBrowserChanges(getRenderIds(), normaliseToClientIds(getExecuteIds(), viewRoot), ec.getRequestParameterValuesMap(), oldDOM);
+                applyBrowserChanges(getRenderIds(), getExecuteIds(), ec.getRequestParameterValuesMap(), oldDOM);
                 writer.setDocument(oldDOM);
                 writer.saveOldDocument();
 
+                UIViewRoot viewRoot = facesContext.getViewRoot();
                 List<DOMUtils.EditOperation> diffs = null;
                 Collection<String> customIds = null;
                 Document newDOM = null;
@@ -175,7 +173,7 @@ public class DOMPartialViewContext extends PartialViewContextWrapper {
                     }
                 } else {
                     writer.startSubtreeRendering(oldDOM);
-                    Collection<String> renderIds = normaliseToClientIds(getRenderIds(), viewRoot);
+                    Collection<String> renderIds = getRenderIds();
 
                     resetValues(viewRoot, renderIds);
 
@@ -328,21 +326,6 @@ public class DOMPartialViewContext extends PartialViewContextWrapper {
     public boolean isResetValues() {
         Object value = facesContext.getExternalContext().getRequestParameterMap().get("javax.faces.partial.resetValues");
         return (null != value && "true".equals(value)) ? true : false;
-    }
-
-    private Collection<String> normaliseToClientIds(Collection<String> ids, UIViewRoot root) {
-        ArrayList<String> newIds = new ArrayList<String>(ids.size());
-        for (String id : ids) {
-            UIComponent c = CoreUtils.findComponentByClientId(root, id);
-            if (c == null) {
-                c = CoreUtils.findComponentById(root, id);
-            }
-            if (c != null) {
-                newIds.add(c.getClientId());
-            }
-        }
-
-        return newIds;
     }
 
     private void resetValues(UIViewRoot viewRoot, Collection<String> renderIds) {
@@ -553,7 +536,7 @@ public class DOMPartialViewContext extends PartialViewContextWrapper {
         for (int i = 0; i < inputElementsLength; i++) {
             Element inputElement = (Element) inputElements.item(i);
             String id = inputElement.getAttribute("id");
-            if (id != null && !"".equals(id)) {
+            if (!"".equals(id)) {
                 String name;
                 if (parameters.containsKey(id) && shouldApplyChange(executeIds, id, document) && shouldApplyChange(renderIds, id, document)) {
 

@@ -577,9 +577,6 @@ public class EnvUtils {
         return PlutoPortalClass != null;
     }
 
-    public static boolean isPortal() {
-        return isLiferay() || isPlutoPortal() || isWebSpherePortal();
-    }
 
     /**
      * Returns true if JSF Partial State Saving is active.
@@ -999,17 +996,7 @@ public class EnvUtils {
      * @return true if JSF implementation is 2.2
      */
     public static boolean isJSF22() {
-        final String version = FacesContext.class.getPackage().getImplementationVersion();
-        if (version == null) {
-            try {
-                Class.forName("javax.faces.flow.Flow");
-                return true;
-            } catch (ClassNotFoundException ex) {
-                return false;
-            }
-        } else {
-            return version.startsWith("2.2");
-        }
+        return FacesContext.class.getPackage().getImplementationVersion().startsWith("2.2");
     }
 
 

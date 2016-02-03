@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 
 <!--
   ~ Copyright 2004-2014 ICEsoft Technologies Canada Corp.
@@ -33,7 +34,7 @@
 
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        	<param-value>Development</param-value>
+        	<param-value>Production</param-value> 
 
         	<!-- Use Development mode for debugging, results in uncompressed resources being loaded.
         	<param-value>Development</param-value>
@@ -100,10 +101,6 @@
     
     <context-param>
         <param-name>com.icesoft.mobilesimulator.RUN_SIMULATOR_IN_PRODUCTION</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>org.icefaces.strictSessionTimeout</param-name>
         <param-value>true</param-value>
     </context-param>
 
