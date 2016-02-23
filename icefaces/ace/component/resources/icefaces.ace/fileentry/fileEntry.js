@@ -564,7 +564,7 @@ ice.ace.fileentry = {
 			}
         }
     },
-
+    
     clearSingleFileSelection : function(clientId) {
         var root = document.getElementById(clientId);
         if (root && root.firstChild) {
@@ -579,8 +579,4 @@ ice.ace.fileentry.clear = function(id, multiple) {
 		var root = document.getElementById(id + '_container');
 		if (root) root.innerHTML = root.innerHTML;
 	}
-};
-
-ice.ace.fileentry.reset = function(id, multiple) {
-	ice.ace.fileentry.clear(id, multiple);
 };

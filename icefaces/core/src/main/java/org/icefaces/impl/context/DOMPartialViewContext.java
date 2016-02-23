@@ -17,7 +17,6 @@
 package org.icefaces.impl.context;
 
 import org.icefaces.impl.event.FixViewState;
-import org.icefaces.impl.util.CoreUtils;
 import org.icefaces.impl.util.DOMUtils;
 import org.icefaces.util.EnvUtils;
 import org.icefaces.util.FocusController;
@@ -145,12 +144,11 @@ public class DOMPartialViewContext extends PartialViewContextWrapper {
                 facesContext.setResponseWriter(writer);
 
                 Document oldDOM = writer.getOldDocument();
-                UIViewRoot viewRoot = facesContext.getViewRoot();
-
                 applyBrowserChanges(getRenderIds(), getExecuteIds(), ec.getRequestParameterValuesMap(), oldDOM);
                 writer.setDocument(oldDOM);
                 writer.saveOldDocument();
 
+                UIViewRoot viewRoot = facesContext.getViewRoot();
                 List<DOMUtils.EditOperation> diffs = null;
                 Collection<String> customIds = null;
                 Document newDOM = null;
@@ -538,7 +536,7 @@ public class DOMPartialViewContext extends PartialViewContextWrapper {
         for (int i = 0; i < inputElementsLength; i++) {
             Element inputElement = (Element) inputElements.item(i);
             String id = inputElement.getAttribute("id");
-            if (id != null && !"".equals(id)) {
+            if (!"".equals(id)) {
                 String name;
                 if (parameters.containsKey(id) && shouldApplyChange(executeIds, id, document) && shouldApplyChange(renderIds, id, document)) {
 

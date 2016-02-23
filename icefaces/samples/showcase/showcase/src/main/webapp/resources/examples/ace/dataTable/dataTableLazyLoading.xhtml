@@ -25,6 +25,7 @@
     <ui:param name="title" value="#{msgs['example.ace.dataTable.lazyLoading.title']}"/>
     <ui:param name="description" value="#{msgs['example.ace.dataTable.lazyLoading.description']}"/>
 
+
     <ui:define name="example">
         <h:form id="form">
            <ace:dataTable id="carTable"
@@ -33,8 +34,6 @@
                                   lazy="true"
                                   rows="10"
                                   paginator="true"
-                                  paginatorTemplate="{FirstPageLink} {FastRewind} {PreviousPageLink} {PageLinks} {NextPageLink} {FastForward} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
-                                  pagesToSkip="10"
                                   pageCount="5"
                                   rowIndexVar="row">
                <ace:column id="rowNumber" headerText="Row #" footerText="Row #">

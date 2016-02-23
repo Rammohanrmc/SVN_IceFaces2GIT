@@ -306,11 +306,8 @@ public class DataTableMeta extends UIDataMeta {
 
     @Property(tlddoc = "Defines a coded string representing the controls available as part of" +
             " the paginator. Default is: \"{FirstPageLink} {PreviousPageLink} " +
-            "{PageLinks} {NextPageLink} {LastPageLink}\". The {FastRewind} and {FastForward} controls are also available. They skip a number of pages backward or forward, respectively. This number is defined by the 'pagesToSkip' property.")
+            "{PageLinks} {NextPageLink} {LastPageLink}\".")
     private String paginatorTemplate;
-
-    @Property(tlddoc = "Defines the number of pages to skip when pressing the FastRewind and FastForward buttons.", defaultValue = "3")
-    private int pagesToSkip;
 
     @Property(tlddoc = "Defines the location of the paginator if enabled. Available " +
             "options are top, bottom, or the default, both.", defaultValue = "both")
@@ -367,8 +364,8 @@ public class DataTableMeta extends UIDataMeta {
     /* ########################## Selection Prop. ########################## */
     /* ##################################################################### */
     @Property(tlddoc = "Defines a code word indicating method of table element selection." +
-            " Available values include: \"multiple\", \"single\", \"enhMultiple\"," +
-            " \"cellblock\", \"cellrange\", \"multiplecell\" and \"singlecell\". The enhanced multiple mode (\"enhMultiple\") works in the following way. Single clicking a row will select it and deselect all other rows. No toggling occurs unless the Ctrl/Command key is held, in which case the other rows won't be deselected. Holding the Shift key will cause the range of rows between the last selected row and the current one to be selected.")
+            " Available values include: \"multiple\", \"single\"," +
+            " \"cellblock\", \"cellrange\", \"multiplecell\" and \"singlecell\".")
     private String selectionMode;
 
     @Property(tlddoc = "Enable to require a double-click to fire row/cell selection events.")

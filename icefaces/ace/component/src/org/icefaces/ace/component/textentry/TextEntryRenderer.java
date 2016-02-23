@@ -91,7 +91,6 @@ public class TextEntryRenderer extends InputRenderer {
 
         writer.startElement("input", null);
         writer.writeAttribute("id", clientId + "_input", null);
-		writer.writeAttribute("data-ice-clear-ignore", "true", null);
         if (ariaEnabled) {
             writer.writeAttribute("role", "textbox", null);
         }
@@ -116,7 +115,7 @@ public class TextEntryRenderer extends InputRenderer {
         String embeddedLabel = null;
         String nameToRender = clientId + "_input";
         String valueToRender = null;
-		if (textEntry.isValid() || textEntry.getSubmittedValue() == null) {
+	if (textEntry.isValid() || textEntry.getSubmittedValue() == null) {
 			valueToRender = textEntry.isRedisplay() ? ComponentUtils.getStringValueToRender(context, textEntry) : "";
 		} else {
 			valueToRender = (String) textEntry.getSubmittedValue();
@@ -132,22 +131,21 @@ public class TextEntryRenderer extends InputRenderer {
                 Date aDate = new Date();
                 valueToRender =  sdf.format(aDate);
         }
-		if (hasLabel && labelPosition.equals("inField") && hasIndicator) {
-			if (indicatorPosition.equals("labelLeft")) {
-				label = indicator + label;
-			} else if (indicatorPosition.equals("labelRight")) {
-				label = label + indicator;
-			}
-		}
         if ((valueToRender == null || valueToRender.trim().length() <= 0) && hasLabel && labelPosition.equals("inField")) {
 			writer.writeAttribute("type", type, null);
             nameToRender = clientId + "_label";
-            valueToRender = label;
+            valueToRender = embeddedLabel = label;
+            if (hasIndicator) {
+                if (indicatorPosition.equals("labelLeft")) {
+                    valueToRender = embeddedLabel = indicator + valueToRender;
+                } else if (indicatorPosition.equals("labelRight")) {
+                    valueToRender = embeddedLabel = valueToRender + indicator;
+                }
+            }
             defaultClass += " " + LABEL_STYLE_CLASS + "-infield";
         } else {
 			writer.writeAttribute("type", textEntry.isSecret() ? "password" : type, null);
 		}
-		if (hasLabel && labelPosition.equals("inField")) embeddedLabel = label;
         writer.writeAttribute("name", nameToRender, null);
         writer.writeAttribute("value", valueToRender , null);
 

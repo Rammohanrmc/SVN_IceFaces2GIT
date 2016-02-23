@@ -129,7 +129,7 @@ public class ScanRenderer extends BaseInputRenderer {
         String secondLine=" if (buttonElem) { " +
                 "console.log('have buttonElem');" +
                 "var existingTextElem = buttonElem.firstChild; " +
-                "if (existingTextElem && (typeof arg['value'] != 'undefined')){" +
+                "if (existingTextElem){" +
                 "     existingTextElem.innerHTML='"+capturedLabel+"';" +
                 "} " +
              "}};"  ;

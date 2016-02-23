@@ -35,7 +35,6 @@ import javax.faces.event.PostAddToViewEvent;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -231,10 +230,6 @@ public class ICEpushResourceHandler extends ResourceHandlerWrapper implements Ph
                     //capture & log Tomcat specific exception
                     if (e.getClass().getName().endsWith("ClientAbortException")) {
                         log.fine("Browser closed the connection prematurely for " + requestURI);
-                    } else if ("Broken pipe".equals(e.getMessage())) {
-                        log.fine("Browser connection was severed " + requestURI);
-                    } else if (e.getMessage().contains("Connection reset by peer")) {
-                        log.fine("Browser reset the connection for " + requestURI);
                     } else {
                         throw e;
                     }

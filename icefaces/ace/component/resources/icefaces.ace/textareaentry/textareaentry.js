@@ -52,10 +52,6 @@ ice.ace.TextAreaEntry = function(id, cfg) {
                 }
             });
     }
-
-	if (!this.jq.hasClass(cfg.inFieldLabelStyleClass))
-		ice.ace.setResetValue(this.id, this.jq.val());
-
     this.jq.blur(function() {
         ice.setFocus();
     });
@@ -122,27 +118,11 @@ ice.ace.jq(document).on("keydown keypress", function(e){
 
 ice.ace.TextAreaEntry.clear = function(id, inFieldLabel, inFieldLabelStyleClass) {
 	var input = ice.ace.jq(ice.ace.escapeClientId(id + "_input"));
-	if (!input.hasClass("ui-input-label-infield"))
-		ice.ace.setResetValue(id, input.val());
 	if (inFieldLabel) {
 		input.attr({name: id + "_label"});
 		input.val(inFieldLabel);
 		input.addClass("ui-input-label-infield");
 	} else {
 		input.val('');
-	}
-};
-
-ice.ace.TextAreaEntry.reset = function(id, inFieldLabel, inFieldLabelStyleClass) {
-	var value = ice.ace.resetValues[id];
-	if (ice.ace.isSet(value)) {
-		var input = ice.ace.jq(ice.ace.escapeClientId(id + "_input"));
-		if (value) {
-			if (inFieldLabel) {
-				input.attr({name: input.attr('id')});
-				input.removeClass("ui-input-label-infield");
-			}
-			input.val(value);
-		} else ice.ace.TextAreaEntry.clear(id, inFieldLabel, inFieldLabelStyleClass);
 	}
 };

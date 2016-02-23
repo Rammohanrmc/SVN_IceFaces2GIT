@@ -169,7 +169,7 @@ public class RadioButtonsRenderer extends InputRenderer {
         // Root Container
         writer.startElement(HTML.DIV_ELEM, radioButtons);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-		renderResetSettings(facesContext, clientId, radioButtons);
+		renderResetSettings(facesContext, clientId);
 //        ComponentUtils.enableOnElementUpdateNotify(writer, clientId);
 
         writer.writeAttribute(HTML.CLASS_ATTR, "ice-ace-radiobutton", null);
@@ -253,7 +253,6 @@ public class RadioButtonsRenderer extends InputRenderer {
         if (selected) writer.writeAttribute("name", radioButtons.getClientId(facesContext), null);
         writer.writeAttribute("value", value, null);
 		writer.writeAttribute("data-value", value, null);
-        writer.writeAttribute("data-ice-clear-ignore", "true", null);
         writer.endElement("input");
 
 		// register radio button with group
@@ -370,7 +369,7 @@ public class RadioButtonsRenderer extends InputRenderer {
 		return (value != null ? value.toString() : "");
 	}
 
-	protected void renderResetSettings(FacesContext context, String clientId, RadioButtons radioButtons) throws IOException {
+	protected void renderResetSettings(FacesContext context, String clientId) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 
 		JSONBuilder jb = JSONBuilder.create();
@@ -379,7 +378,7 @@ public class RadioButtonsRenderer extends InputRenderer {
 		jb.beginArray();
 		jb.item(clientId);
 		jb.item(EnvUtils.isAriaEnabled(context));
-		jb.item(radioButtons.getClientId(context));
+		jb.item(true);
 		jb.endArray();
 		jb.endArray();
 

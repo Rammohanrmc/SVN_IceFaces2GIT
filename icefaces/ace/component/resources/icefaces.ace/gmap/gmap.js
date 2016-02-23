@@ -317,7 +317,7 @@ ice.ace.gMap.getGMapWrapper = function (id) {
         GMapRepository = newRepository;
     }
 
-    ice.ace.gMap.addMarker = function (ele, markerID, Lat, Lon, address, options) {
+    ice.ace.gMap.addMarker = function (ele, markerID, Lat, Lon, options) {
         var wrapper = ice.ace.gMap.getGMapWrapper(ele);
         var marker = wrapper.markers[markerID];
         if (marker == null || marker.getMap() == null) {
@@ -328,37 +328,11 @@ ice.ace.gMap.getGMapWrapper = function (id) {
                 markerOps = {};
             }
             markerOps.map = wrapper.getRealGMap();
-			if (address) {
-				var initGeocoder = new google.maps.Geocoder();
-				initGeocoder.geocode({ 'address': address }, function (results, status) {
-					if (status == google.maps.GeocoderStatus.OK) {
-						var result = results[0];
-						if (result) {
-							markerOps.position = result.geometry.location;
-							var marker = new google.maps.Marker(markerOps);
-							wrapper.markers[markerID] = marker;
-							var callbacks = ice.ace.gMap.markerCallbacks[markerID];
-							if (callbacks) {
-								while (callbacks.length > 0)
-									callbacks.pop().call(marker);
-							}
-						}
-					}
-				});
-			} else {
-				markerOps.position = new google.maps.LatLng(Lat, Lon);
-				var marker = new google.maps.Marker(markerOps);
-				wrapper.markers[markerID] = marker;
-			}
+            markerOps.position = new google.maps.LatLng(Lat, Lon);
+            var marker = new google.maps.Marker(markerOps);
+            wrapper.markers[markerID] = marker;
         }
-    };
-
-if (!ice.ace.gMap.markerCallbacks) ice.ace.gMap.markerCallbacks = {};
-
-ice.ace.gMap.addMarkerCallback = function(id, callback){
-	if (!ice.ace.gMap.markerCallbacks[id]) ice.ace.gMap.markerCallbacks[id] = new Array();
-	ice.ace.gMap.markerCallbacks[id].push(callback);
-};
+    }
 
     ice.ace.gMap.removeMarker = function (ele, markerId) {
         var gmapWrapper = ice.ace.gMap.getGMapWrapper(ele);
@@ -817,7 +791,7 @@ ice.ace.gMap.addMarkerCallback = function(id, callback){
         ice.ace.gMap.getGMapWrapper(ele).overlays[overlayID] = overlay;
     }
 
-    ice.ace.gMap.addGWindow = function (ele, winId, content, position,options,markerId,showOnClick,startOpen, addressBasedMarker) {
+    ice.ace.gMap.addGWindow = function (ele, winId, content, position,options,markerId,showOnClick,startOpen) {
         var wrapper = ice.ace.gMap.getGMapWrapper(ele);
         var map = ice.ace.gMap.getGMapWrapper(ele).getRealGMap();
         var win = wrapper.infoWindows[winId];
@@ -826,29 +800,24 @@ ice.ace.gMap.addMarkerCallback = function(id, callback){
         win = new google.maps.InfoWindow();
         win.setPosition(position);
         win.setContent(content);
-        if (options != "none") {
-            win.setOptions(eval("({" + options + (addressBasedMarker ? ',disableAutoPan:true' : '') + "})"));
-        } else if (addressBasedMarker) {
-			win.setOptions({disableAutoPan:true});
-		}
+        if (options != "none")
+        {
+            win.setOptions(eval("({" + options + "})"));
+        }
         if (markerId != "none")
         {
-			var attachToMarker = function() {
-				var marker = wrapper.markers[markerId];
-				if(showOnClick)
-				{
-				  google.maps.event.addDomListener(marker,"click",function(){
-					  var map = ice.ace.gMap.getGMapWrapper(ele).getRealGMap();
-					  win.open(map,marker);
-				  });
-				  if(startOpen)
-					  win.open(map,marker);
-				}
-				else
-					win.open(map,marker);
-			};
-			if (addressBasedMarker) ice.ace.gMap.addMarkerCallback(markerId, attachToMarker);
-			else attachToMarker();
+            var marker = wrapper.markers[markerId];
+            if(showOnClick)
+            {
+              google.maps.event.addDomListener(marker,"click",function(){
+                  var map = ice.ace.gMap.getGMapWrapper(ele).getRealGMap();
+                  win.open(map,marker);
+              });
+              if(startOpen)
+                  win.open(map,marker);
+            }
+            else
+                win.open(map,marker);
         }
         else
         {
@@ -900,7 +869,7 @@ ice.ace.gMap.addMarkerCallback = function(id, callback){
         }
     }
 
-    ice.ace.gMap.addEvent = function (mapId,parentId,eventId,parentName,eventType,rendererType,script,listener,addressBasedMarker){
+    ice.ace.gMap.addEvent = function (mapId,parentId,eventId,parentName,eventType,rendererType,script,listener){
         var wrapper = ice.ace.gMap.getGMapWrapper(mapId);
 
         var componentToUse;
@@ -942,17 +911,6 @@ ice.ace.gMap.addMarkerCallback = function(id, callback){
                 script + eventRequest
             );
         });
-		else if (addressBasedMarker) {
-			ice.ace.gMap.addMarkerCallback(parentId, function() {
-					wrapper.events[eventId] = google.maps.event.addDomListener(wrapper.markers[parentId],eventType,function(){
-					eval(
-						"var map = ice.ace.gMap.getGMapWrapper('" + mapId + "').getRealGMap();" +
-						"var component = " + componentToUse + ";" +
-						script + eventRequest
-					);
-				});
-			});
-		}
 		wrapper.eventModels[eventId] = {mapId:''+mapId,parentId:''+parentId,eventId:''+eventId,parentName:''+parentName,eventType:''+eventType,rendererType:''+rendererType,script:''+script,listener:''+listener};
     };
 

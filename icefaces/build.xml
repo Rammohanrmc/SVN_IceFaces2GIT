@@ -38,14 +38,6 @@
 
     <target name="icepush" depends="checkIfEEBundle" if="isOSBundle" description="Builds the ICEpush core library (icepush.jar).">
         <subant>
-            <fileset dir=".">
-                <include name="icepush/util/build.xml" />
-                <include name="icepush/cloud/build.xml" />
-            </fileset>
-            <target name="clean" />
-            <target name="jar" />
-        </subant>
-        <subant>
             <fileset dir="." includes="icepush/core/build.xml">
             </fileset>
             <propertyset refid="build.properties"/>
@@ -106,12 +98,6 @@
         </subant>
         <subant target="clean">
             <fileset file="icepush/core/build.xml" />
-        </subant>
-        <subant target="clean">
-            <fileset dir=".">
-                <include name="icepush/cloud/build.xml" />
-                <include name="icepush/util/build.xml" />
-            </fileset>
         </subant>
         <delete>
             <fileset dir="lib">
@@ -273,7 +259,7 @@
             <fileset dir="${bundle.dir.bin}/samples/core/chat-portlet" includes="build.xml"/>
         </subant>
 
-        <!-- Do not distribute the Liferay Faces Bridge libs with ICEfaces. -->
+        <!-- Not yet ready to distribute the Liferay Faces Bridge yet. -->
         <delete dir="${bundle.dir.bin}/lib/portlets/liferayfaces"/>
     </target>
 
@@ -306,7 +292,7 @@
         <delete dir="${bundle.dir.src}/samples/dist"/>
         <delete dir="${bundle.dir.src}/samples/core/test"/>        
         <delete dir="${bundle.dir.src}/samples/core/basic"/>
-		<!-- Do not distribute the Liferay Faces Bridge libs with ICEfaces. -->
+
         <delete dir="${bundle.dir.src}/lib/portlets/liferayfaces"/>
     </target>
 

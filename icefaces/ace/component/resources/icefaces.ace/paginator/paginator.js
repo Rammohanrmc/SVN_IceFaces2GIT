@@ -27,9 +27,6 @@ ice.ace.DataTable.Paginator = function(table) {
         labels.last = cfg.lastLbl,
         labels.next = cfg.nextLbl,
         labels.prev = cfg.prevLbl,
-        labels.rewind = cfg.rewindLbl,
-        labels.forward = cfg.forwardLbl,
-        pagesToSkip = cfg.pagesToSkip > 0 ? cfg.pagesToSkip : 3,
     this.container = container;
 
     container.keyboardPagination = function(e) {
@@ -109,25 +106,13 @@ ice.ace.DataTable.Paginator = function(table) {
                 var className = 'ui-paginator-previous ui-state-default ui-corner-all';
 				var buttonId = specificContainer.attr('id') + '_previousPageLink';
                 if (activeIndex == 1) className += ' ui-state-disabled';
-                markup = '<a href="#" id="'+buttonId+'" class="'+className+'" onclick="ice.setFocus(\'' + buttonId + '\');" onkeydown="var e = event || window.event; if (e.keyCode == 32 || e.keyCode == 13) { this.click();return false; }" tabindex="0" title="'+labels.prev+'" aria-label="'+labels.prev+'" style="vertical-align:middle;"><span class="ui-icon ui-icon-triangle-1-w"></span></a>';
+                markup = '<a href="#" id="'+buttonId+'" class="'+className+'" onclick="ice.setFocus(\'' + buttonId + '\');" onkeydown="var e = event || window.event; if (e.keyCode == 32 || e.keyCode == 13) { this.click();return false; }" tabindex="0" title="'+labels.prev+'" aria-label="'+labels.prev+'" style="vertical-align:middle;"><span class="ui-icon ui-icon-seek-prev"></span></a>';
             }
             else if (keyword == 'nextPageLink') {
                 var className = 'ui-paginator-next ui-state-default ui-corner-all';
 				var buttonId = specificContainer.attr('id') + '_nextPageLink';
                 if (activeIndex == max) className += ' ui-state-disabled';
-                markup = '<a href="#" id="'+buttonId+'" class="'+className+'" onclick="ice.setFocus(\'' + buttonId + '\');" onkeydown="var e = event || window.event; if (e.keyCode == 32 || e.keyCode == 13) { this.click();return false; }" tabindex="0" title="'+labels.next+'" aria-label="'+labels.next+'" style="vertical-align:middle;"><span class="ui-icon ui-icon-triangle-1-e"></span></a>';
-            }
-            else if (keyword == 'fastRewind') {
-                var className = 'ui-paginator-rewind ui-state-default ui-corner-all';
-				var buttonId = specificContainer.attr('id') + '_fastRewind';
-                if (activeIndex == 1) className += ' ui-state-disabled';
-                markup = '<a href="#" id="'+buttonId+'" class="'+className+'" onclick="ice.setFocus(\'' + buttonId + '\');" onkeydown="var e = event || window.event; if (e.keyCode == 32 || e.keyCode == 13) { this.click();return false; }" tabindex="0" title="'+labels.rewind+'" aria-label="'+labels.rewind+'" style="vertical-align:middle;"><span class="ui-icon ui-icon-seek-prev"></span></a>';
-            }
-            else if (keyword == 'fastForward') {
-                var className = 'ui-paginator-forward ui-state-default ui-corner-all';
-				var buttonId = specificContainer.attr('id') + '_fastForward';
-                if (activeIndex == max) className += ' ui-state-disabled';
-                markup = '<a href="#" id="'+buttonId+'" class="'+className+'" onclick="ice.setFocus(\'' + buttonId + '\');" onkeydown="var e = event || window.event; if (e.keyCode == 32 || e.keyCode == 13) { this.click();return false; }" tabindex="0" title="'+labels.forward+'" aria-label="'+labels.forward+'" style="vertical-align:middle;"><span class="ui-icon ui-icon-seek-next"></span></a>';
+                markup = '<a href="#" id="'+buttonId+'" class="'+className+'" onclick="ice.setFocus(\'' + buttonId + '\');" onkeydown="var e = event || window.event; if (e.keyCode == 32 || e.keyCode == 13) { this.click();return false; }" tabindex="0" title="'+labels.next+'" aria-label="'+labels.next+'" style="vertical-align:middle;"><span class="ui-icon ui-icon-seek-next"></span></a>';
             }
             else if (keyword == 'rowsPerPageDropdown' && cfg.rowsPerPageOptions) {
                 markup = '<select class="ui-paginator-rpp-options" title="Rows per page" id="' + specificContainer.attr('id') + keyword + '">';
@@ -177,7 +162,6 @@ ice.ace.DataTable.Paginator = function(table) {
         function encodePaginatorTemplate() {
             var keywords = ['currentPageReport', 'firstPageLink', 'lastPageLink',
                     'previousPageLink', 'nextPageLink', 'jumpToPageDropdown',
-                    'fastRewind', 'fastForward',
                     'pageLinks', 'rowsPerPageDropdown'],
                 t = template;
 
@@ -231,9 +215,7 @@ ice.ace.DataTable.Paginator = function(table) {
                 else if (control.hasClass('ui-paginator-first')
                     || control.hasClass('ui-paginator-next')
                     || control.hasClass('ui-paginator-last')
-                    || control.hasClass('ui-paginator-previous')
-                    || control.hasClass('ui-paginator-rewind')
-                    || control.hasClass('ui-paginator-forward'))
+                    || control.hasClass('ui-paginator-previous'))
                     directionLinkClick(control);
                 else alert(control[0].className);
             }
@@ -262,14 +244,6 @@ ice.ace.DataTable.Paginator = function(table) {
                     activeIndex++;
                 if (control.hasClass('ui-paginator-last'))
                     activeIndex = max;
-                if (control.hasClass('ui-paginator-rewind') && activeIndex > 1) {
-                    activeIndex = activeIndex - pagesToSkip;
-                    activeIndex = activeIndex < 1 ? 1 : activeIndex;
-                }
-                if (control.hasClass('ui-paginator-forward') && activeIndex < max) {
-                    activeIndex = activeIndex + pagesToSkip;
-                    activeIndex = activeIndex > max ? max : activeIndex;
-                }
 
                 if (oldIndex != activeIndex) submit();
             }

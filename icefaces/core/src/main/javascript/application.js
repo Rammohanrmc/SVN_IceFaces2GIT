@@ -35,9 +35,7 @@ if (!window.ice.icefaces) {
         namespace.configuration = new Object();
         namespace.disableDefaultErrorPopups = false;
         //define primitive submit function to allow overriding it later in special environments
-        namespace.submitFunction = function (source, event, options) {
-            jsf.ajax.request(source, event, options);
-        };
+        namespace.submitFunction = jsf.ajax.request;
 
         function detectByReference(ref) {
             return function(o) {
@@ -432,14 +430,9 @@ if (!window.ice.icefaces) {
 
                     info(logger, 'received error message [code: ' + e.responseCode + ']: ' + e.responseText);
                     broadcast(perRequestServerErrorListeners, [ e.responseCode, e.responseText, containsXMLData(xmlContent) ? xmlContent : null]);
-                } else if (e.status == 'httpError') {
+                } else if (e.status == 'httpError' || e.status == 'malformedXML') {
                     warn(logger, 'HTTP error [code: ' + e.responseCode + ']: ' + e.description + '\n' + e.responseText);
                     if (not(e.source && containsSubstring(e.source.id, '-retrieve-update'))) {
-                        broadcast(perRequestNetworkErrorListeners, [e.responseCode, e.description]);
-                    }
-                } else if (e.status == 'malformedXML') {
-                    warn(logger, 'HTML parsing or JS evaluation error [code: ' + e.responseCode + ']: ' + e.description + '\n' + e.responseText);
-                    if (e.responseCode > 200) {
                         broadcast(perRequestNetworkErrorListeners, [e.responseCode, e.description]);
                     }
                 } else {

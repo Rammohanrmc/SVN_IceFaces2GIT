@@ -58,7 +58,6 @@ mobi.flipswitch = {
                 this.flipperEl.children[2].className = 'mobi-flipswitch-txt-off ui-button ui-corner-all ui-state-default ui-state-active';
                 value = false;
             }
-			ice.ace.setResetValue(clientId, !value);
             var hidden = this.id + "_hidden";
             var thisEl = document.getElementById(hidden);
             if (thisEl) {
@@ -109,8 +108,6 @@ mobi.flipswitch = {
 };
 
 mobi.flipswitch.clear = function(id) {
-	if (typeof ice.ace.resetValues[id] == 'undefined') mobi.flipswitch.setResetValue(id);
-
 	var element = document.getElementById(id);
 	var hidden = document.getElementById(id + "_hidden");
 
@@ -118,36 +115,6 @@ mobi.flipswitch.clear = function(id) {
 		element.className = 'mobi-flipswitch mobi-flipswitch-off ui-widget';
 		element.children[0].className = 'mobi-flipswitch-txt-on ui-button ui-corner-all ui-state-default';
 		element.children[2].className = 'mobi-flipswitch-txt-off ui-button ui-corner-all ui-state-default ui-state-active';
-		hidden.value = 'false';
+		hidden.value = 'off';
 	};
-};
-
-mobi.flipswitch.reset = function(id) {
-	var value = ice.ace.resetValues[id];
-	if (ice.ace.isSet(value)) {
-		var element = document.getElementById(id);
-		var hidden = document.getElementById(id + "_hidden");
-
-		if (element && hidden) {
-			if (value === true) {
-				element.className = 'mobi-flipswitch mobi-flipswitch-on ui-widget';
-				element.children[0].className = 'mobi-flipswitch-txt-on ui-button ui-corner-all ui-state-default ui-state-active';
-				element.children[2].className = 'mobi-flipswitch-txt-off ui-button ui-corner-all ui-state-default';
-				hidden.value = 'true';
-			} else {
-				element.className = 'mobi-flipswitch mobi-flipswitch-off ui-widget';
-				element.children[0].className = 'mobi-flipswitch-txt-on ui-button ui-corner-all ui-state-default';
-				element.children[2].className = 'mobi-flipswitch-txt-off ui-button ui-corner-all ui-state-default ui-state-active';
-				hidden.value = 'false';
-			}
-		};
-	}
-};
-
-mobi.flipswitch.setResetValue = function(id) {
-	var flipperEl = document.getElementById(id);
-	if (flipperEl) {
-		if (flipperEl.className.indexOf('-off ') > 0) ice.ace.setResetValue(id, false);
-		else ice.ace.setResetValue(id, true);
-	}
 };

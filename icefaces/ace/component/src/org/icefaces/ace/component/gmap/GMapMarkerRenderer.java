@@ -39,72 +39,48 @@ public class GMapMarkerRenderer extends CoreRenderer {
         writer.startElement("script", null);
         writer.writeAttribute("type", "text/javascript", null);
         writer.write("ice.ace.jq(function() {");
-        String address = marker.getAddress();
+        String oldLatitude = "";
+        String oldLongitude = "";
         String currentLat = marker.getLatitude();
         String currentLon = marker.getLongitude();
 		String mapClientId = GMapRenderer.getMapClientId(context, marker);
 		JSONBuilder jb;
         //create a marker if lat and lon defined on the component itself
         if (!marker.isDisabled()) {
-			if (address != null && !"".equals(address)) {
-				jb = JSONBuilder.create();
-				jb.beginFunction("ice.ace.gMap.removeMarker")
-					.item(mapClientId)
-					.item(clientId)
-				.endFunction();
-				writer.write(jb.toString());
-				if (marker.getOptions() != null) {
-					jb = JSONBuilder.create();
-					jb.beginFunction("ice.ace.gMap.addMarker")
-						.item(mapClientId)
-						.item(clientId)
-						.item("")
-						.item("")
-						.item(address)
-						.item(marker.getOptions())
-					.endFunction();
-					writer.write(jb.toString());
-				} else {
-					jb = JSONBuilder.create();
-					jb.beginFunction("ice.ace.gMap.addMarker")
-						.item(mapClientId)
-						.item(clientId)
-						.item("")
-						.item("")
-						.item(address)
-					.endFunction();
-					writer.write(jb.toString());
-				}
-            } else if (currentLat != null && currentLon != null
+            if (currentLat != null && currentLon != null
                     && currentLat.length() > 0 && currentLon.length() > 0) {
-				jb = JSONBuilder.create();
-				jb.beginFunction("ice.ace.gMap.removeMarker")
-					.item(mapClientId)
-					.item(clientId)
-				.endFunction();
-				writer.write(jb.toString());
-				if (marker.getOptions() != null) {
+                if (!currentLat.equals(oldLatitude) ||
+                        !currentLon.equals(oldLongitude)) {
+                    //to dynamic support first to remove if any
 					jb = JSONBuilder.create();
-					jb.beginFunction("ice.ace.gMap.addMarker")
+					jb.beginFunction("ice.ace.gMap.removeMarker")
 						.item(mapClientId)
 						.item(clientId)
-						.item(currentLat)
-						.item(currentLon)
-						.item("")
-						.item(marker.getOptions())
 					.endFunction();
-					writer.write(jb.toString());
-				} else {
-					jb = JSONBuilder.create();
-					jb.beginFunction("ice.ace.gMap.addMarker")
-						.item(mapClientId)
-						.item(clientId)
-						.item(currentLat)
-						.item(currentLon)
-						.item("")
-					.endFunction();
-					writer.write(jb.toString());
-				}
+                    writer.write(jb.toString());
+                    if (marker.getOptions() != null) {
+						jb = JSONBuilder.create();
+						jb.beginFunction("ice.ace.gMap.addMarker")
+							.item(mapClientId)
+							.item(clientId)
+							.item(currentLat)
+							.item(currentLon)
+							.item(marker.getOptions())
+						.endFunction();
+                        writer.write(jb.toString());
+                    } else {
+						jb = JSONBuilder.create();
+						jb.beginFunction("ice.ace.gMap.addMarker")
+							.item(mapClientId)
+							.item(clientId)
+							.item(currentLat)
+							.item(currentLon)
+						.endFunction();
+                        writer.write(jb.toString());
+					}
+                }
+                oldLatitude = currentLat;
+                oldLongitude = currentLon;
             }
             if (marker.getAnimation() != null) {
 				jb = JSONBuilder.create();

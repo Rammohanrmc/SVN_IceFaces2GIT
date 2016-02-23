@@ -24,7 +24,3 @@
 .ice-linkbutton > span > span > a {
     text-decoration: underline !important;
 }
-
-.ice-linkbutton {
-	display: inline-block;
-}

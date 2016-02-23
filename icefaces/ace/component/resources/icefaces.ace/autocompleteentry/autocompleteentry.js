@@ -64,10 +64,7 @@ ice.ace.Autocompleter = function(id, updateId, rowClass, selectedRowClass, delay
 				$element.data("labelIsInField", false);
 				self.cfg.labelIsInField = false;
 			}
-			setTimeout(function() { // avoid race condition on FF, ICE-10941
-				$element.get(0).focus();
-				self.initialize(self.element, self.update, options, rowClass, selectedRowClass, behaviors);
-			}, 50);
+			self.initialize(self.element, self.update, options, rowClass, selectedRowClass, behaviors); 
 		});
 	}
 };
@@ -175,9 +172,7 @@ ice.ace.Autocompleter.prototype = {
         ice.ace.jq(this.update).hide();
         ice.ace.jq(this.element).data("labelIsInField", this.cfg.labelIsInField);
 		ice.ace.jq(this.element).on("blur", function(e) { self.onBlur.call(self, e); });
-		ice.ace.jq(this.element).on("focus", function(e) { setTimeout(function() { // ICE-10941
-			self.onFocus.call(self, e);
-		}, 50); });
+		ice.ace.jq(this.element).on("focus", function(e) { self.onFocus.call(self, e); });
         var keyEvent = "keypress";
         if (ice.ace.Autocompleter.Browser.IE || ice.ace.Autocompleter.Browser.WebKit
 			|| !!navigator.userAgent.match(/Trident.*rv\:11\./)) { // IE11
@@ -566,10 +561,7 @@ ice.ace.Autocompleter.prototype = {
 			this.ajaxBlur.params = this.ajaxBlur.params || {};
 			this.ajaxBlur.params[this.id + '_hardSubmit'] = true;
 			var self = this;
-			this.blurObserver = setTimeout(function() {
-				if (!document.getElementById(self.id)) return;
-				try{ice.ace.ab(self.ajaxBlur);}catch(e){}
-			}, 390);
+			this.blurObserver = setTimeout(function() { try{ice.ace.ab(self.ajaxBlur);}catch(e){} }, 390);
 		}
     },
 
@@ -973,13 +965,11 @@ ice.ace.Autocompleter.prototype = {
 		}
     },
 	
-	updateField: function(value, focus, actualValue) {
+	updateField: function(value, focus) {
 		var currentValue = this.element.value;
-		if (ice.ace.isSet(actualValue)) ice.ace.setResetValue(this.element.id, actualValue);
-		else ice.ace.setResetValue(this.element.id, value);
 		if (currentValue.indexOf(value) != 0)
 			this.element.value = value;
-		if (value === '') this.element.value = '';
+		if (value == '') this.element.value = '';
 		if (focus && ice.ace.jq.support.leadingWhitespace) this.element.focus(); // browsers other than IE7/8
 		if (!ice.ace.jq.support.leadingWhitespace) { // force IE7/8 to set focus on the text field
 			var element = this.element;
@@ -1024,23 +1014,5 @@ ice.ace.Autocompleter.clear = function(id, inFieldLabel, inFieldLabelStyleClass)
 		input.data("labelIsInField", true);
 	} else {
 		input.val('');
-	}
-};
-
-ice.ace.Autocompleter.reset = function(id, inFieldLabel, inFieldLabelStyleClass) {
-	var value = ice.ace.resetValues[id];
-	var input = ice.ace.jq(ice.ace.escapeClientId(id));
-	if (ice.ace.isSet(value)) input.val(value);
-	if (inFieldLabel) {
-		if (input.val() == "")  {
-			input.attr({name: ''});
-			input.val(inFieldLabel);
-			input.addClass(inFieldLabelStyleClass);
-			input.data("labelIsInField", true);
-		} else {
-			input.attr({name: input.attr('id')});
-			input.removeClass(inFieldLabelStyleClass);
-			input.data("labelIsInField", false);
-		}
 	}
 };

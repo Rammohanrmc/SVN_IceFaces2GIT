@@ -140,7 +140,7 @@ public class PushButtonRenderer extends CoreRenderer {
 
         if (styleClass != null)
             rootStyle += " " + styleClass;
-
+            
         if (style != null)
             writer.writeAttribute(HTML.STYLE_ATTR, style, null);
 
@@ -180,11 +180,6 @@ public class PushButtonRenderer extends CoreRenderer {
 			UIComponent parentForm = ComponentUtils.findParentForm(facesContext, pushButton);
 			if (parentForm != null) {
 				json.entry("clear", parentForm.getClientId(facesContext));
-			}
-		} else if ("reset".equalsIgnoreCase(type)) {
-			UIComponent parentForm = ComponentUtils.findParentForm(facesContext, pushButton);
-			if (parentForm != null) {
-				json.entry("reset", parentForm.getClientId(facesContext));
 			}
 		} else if ("submit".equalsIgnoreCase(type)) {
 			json.entry("submit", true);
